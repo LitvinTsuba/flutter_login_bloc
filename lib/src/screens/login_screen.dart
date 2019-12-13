@@ -9,11 +9,11 @@ class LoginScreen extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(20.0),
       child: Column(
-        children: <Widget>[
+        children: [
           emailField(bloc),
           passwordField(bloc),
           Container(margin: EdgeInsets.only(top: 25.0)),
-          submitButton(),
+          submitButton(bloc),
         ],
       ),
     );
@@ -27,8 +27,8 @@ class LoginScreen extends StatelessWidget {
           onChanged: bloc.changeEmail,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
-            hintText: 'you@email.com',
-            labelText: 'Email Address',
+            hintText: 'you@example.com',
+            labelText: 'EMail Address',
             errorText: snapshot.error,
           ),
         );
@@ -52,12 +52,16 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget submitButton() {
-    return RaisedButton(
-      child: Text('Login'),
-      color: Colors.blue,
-      textTheme: ButtonTextTheme.primary,
-      onPressed: () {},
+  Widget submitButton(Bloc bloc) {
+    return StreamBuilder(
+      stream: bloc.submitValid,
+      builder: (context, snapshot) {
+        return RaisedButton(
+          child: Text('Login'),
+          color: Colors.blue,
+          onPressed: snapshot.hasData ? bloc.submit : null,
+        );
+      },
     );
   }
 }
